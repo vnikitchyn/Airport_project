@@ -25,17 +25,34 @@ namespace AirPortApp
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("Number: ").Append(Number)
-              .Append("\nPortArrival: ").Append(PortArrival)
-              .Append("\nPortDeparture: ").Append(PortDeparture)
-              .Append("\nAirline").Append(Airline)
-              .Append("\nStatus: ").Append(Status)
-              .Append("\nTimeDeparture: ").Append(TimeDeparture.ToString("yyyy-MM-dd hh-mm"))
-              .Append("\nTimeExpected: ").Append(TimeExpected.ToString("yyyy-MM-dd hh-mm"))
-              .Append("\nTimeArrival: ").Append(TimeArrival)
-              .Append("\nTerminal: ").Append(Terminal)
-              .Append("\nGate: ").Append(Gate);
-
+            if (!TimeArrival.Day.Equals(01))
+            {
+                sb.Append("-------\n").
+                   Append("Number: ").Append(Number)
+                  .Append("\nPortArrival: ").Append(PortArrival)
+                  .Append("\nPortDeparture: ").Append(PortDeparture)
+                  .Append("\nAirline: ").Append(Airline)
+                  .Append("\nStatus: ").Append(Status)
+                  .Append("\nTimeDeparture: ").Append(TimeDeparture.ToString("yyyy-MM-dd hh-mm"))
+                  .Append("\nTimeExpected: ").Append(TimeExpected.ToString("yyyy-MM-dd hh-mm"))
+                  .Append("\nTimeArrival: ").Append(TimeArrival.ToString("yyyy-MM-dd hh-mm"))
+                  .Append("\nTerminal: ").Append(Terminal)
+                  .Append("\nGate: ").Append(Gate);
+            }
+            else
+            {
+                sb.Append("-------\n").
+                   Append("Number: ").Append(Number)
+                  .Append("\nPortArrival: ").Append(PortArrival)
+                  .Append("\nPortDeparture: ").Append(PortDeparture)
+                  .Append("\nAirline: ").Append(Airline)
+                  .Append("\nStatus: ").Append(Status)
+                  .Append("\nTimeDeparture: ").Append(TimeDeparture.ToString("yyyy-MM-dd hh-mm"))
+                  .Append("\nTimeExpected: ").Append(TimeExpected.ToString("yyyy-MM-dd hh-mm"))
+                  .Append("\nTimeArrival: ").Append("Not arrived yet")
+                  .Append("\nTerminal: ").Append(Terminal)
+                  .Append("\nGate: ").Append(Gate);
+            }
             return sb.ToString();
         }
 
@@ -125,6 +142,5 @@ namespace AirPortApp
             }
             return res;
         }
-                       
     }
 }

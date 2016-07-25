@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 //–input, deleting and editing of  this information
 //–search by the flight number, time of arrival, arrival (departure) port and the information output about the found flight in the specified format
@@ -23,13 +24,15 @@ namespace AirPortApp
 {
   public static class Flights
     {
-
         internal static List<Flight> flightList = new List<Flight>();
         public enum statusEnum {checkIn=1, gateClosed, arrived, departedAt, unknown, canceled, expectedAt, delayed, inFlight }//"check-in","gate closed","arrived","departed at","unknown","canceled","expected at","delayed","in flight"        
+        public static Type status = typeof(statusEnum);
+        public enum emergencyEnum { fire = 1, evacuation, terrorist, ufo }//""        
         private static string[] statusArray = Enum.GetNames(typeof(statusEnum));
+        public static readonly string  returnMes = "You returned to main menu, you can use 'help' to see all possible options...",
+                                       returnMesFind = "You returned to Find menu, you can use 'help' to see all possible options...";
 
-
-    internal  static void Input()
+        internal static void Input()
         {        
             Console.ForegroundColor = ConsoleColor.Blue;
             Console.WriteLine("Please enter flight parameters");
@@ -77,7 +80,7 @@ namespace AirPortApp
             DateTime timeA;
             DateTime.TryParseExact(timeAS, "yyyy-MM-dd hh-mm", null, System.Globalization.DateTimeStyles.AssumeUniversal, out timeA);            
 
-            //      Console.WriteLine("Status. Please note it could be only one of below:\n{0}...",string.Join(" \n",statusArray));
+ //         Console.WriteLine("Status. Please note it could be only one of below:\n{0}...",string.Join(" \n",statusArray));
             Console.WriteLine("Status. Please note it could be only one of the specified list:\n Pease enter 0-8, based on the status values below");
             foreach (string status in statusArray)
             {
@@ -110,7 +113,6 @@ namespace AirPortApp
                 flight = new Flight(timeD, timeE, timeA, number, portD, portA, airline, terminal, statusE, gate);
                 flightList.Add(flight);
             }
-
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("New flight is added: \n{0}", flight.ToString());
             Console.ReadKey();                  
@@ -121,75 +123,160 @@ namespace AirPortApp
             foreach (Flight flight in flightList)
             {
                 if (number.Equals(flight.Number))
-                flightList.Remove(flight);
+                {
+ //               Console.WriteLine("You are going to delete {0}. Please confirm this action",flight.ToString());
+                  var deleteQuestion =  MessageBox.Show("You are going to delete below flight record" + flight.ToString()+"\nPlease confirm this action", "Delete this flight?", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+                    if (deleteQuestion==DialogResult.OK){
+                        flightList.Remove(flight);
+                        Console.WriteLine("You deleted chosed flight");
+                    }
+                    else
+                        Console.WriteLine("You cancelled delete flight operations");
+                }
             }
-
-
         }
 
-        internal  static void Find(int number)
+        internal static void Find(int number)
         {
+            bool find = false;
             foreach (Flight flight in flightList)
             {
                 if (number.Equals(flight.Number))
-                    flight.ToString();
+                    Console.WriteLine(flight.ToString());
+                find = true;
+            }
+            if (find == false) { 
+            Console.WriteLine("Such flight is not found");
+             }
+            else
+            {
+                Console.WriteLine(returnMesFind);
             }
 
         }
 
-        internal static void Find(string airportA)
+        internal static void FindArrivalPort(string airportA)
         {
+            bool find=false;
             foreach (Flight flight in flightList)
             {
                 if (airportA.Equals(flight.PortArrival))
-                    flight.ToString();
+                {
+                    Console.WriteLine(flight.ToString());
+                    find = true;
+                }
             }
+            if (find==false)
+            Console.WriteLine("Such flight is not found");
+            else
+            {
+                Console.WriteLine(returnMesFind);
+            }
+        }
+
+        internal static void FindDeparturePort(string airportD)
+        {
+            bool find = false;
+            foreach (Flight flight in flightList)
+            {
+                if (airportD.Equals(flight.PortDeparture))
+                {
+                    Console.WriteLine(flight.ToString());
+                    find = true;
+                }
+            }
+            if (find == false)
                 Console.WriteLine("Such flight is not found");
+            else
+            {
+                Console.WriteLine(returnMesFind);
+            }
+        }
 
-
+        //–search of the flight which is the nearest (1 hour) to the specified time to/from the specified port and output information sorted by time
+        internal static void FindNear(DateTime date, string airport)
+        {
+            bool find = false;
+            foreach (Flight flight in flightList)
+            {
+                double timeDdelta = (flight.TimeDeparture - date).TotalHours;
+                double timeAdelta = (flight.TimeArrival - date).TotalHours;
+                double timeEdelta = (flight.TimeExpected - date).TotalHours;
+                bool timeCheck = (timeAdelta>1||timeAdelta<1 || timeDdelta < 1 || timeDdelta < 1 || timeEdelta < 1 || timeEdelta < 1);
+                if (airport.Equals(flight.PortDeparture)||airport.Equals(flight.PortArrival)&&timeCheck)
+                {
+                    flight.ToString();
+                    find = true;
+                }
+            }
+            if (find == false)
+                Console.WriteLine("Such flights are not found");
+            else
+            {
+                Console.WriteLine(returnMesFind);
+            }
         }
 
 
         internal static void Find(DateTime dateA)
         {
+            bool find = false;
             foreach (Flight flight in flightList)
             {
                 if (dateA.Equals(flight.TimeArrival))
+                {
                     flight.ToString();
-
+                    find = true;
+                }
             }
-
+            if (find == false)
+                Console.WriteLine("Such flight is not found");
+            else
+            {
+               Console.WriteLine(returnMesFind);
+            }
         }
 
 
         internal static void ShowAll()
         {
+            if (flightList.Any()==true)
             foreach (Flight flight in flightList)
             {
-                    flight.ToString();
+                Console.WriteLine(flight.ToString());
             }
-
-        }
-
-
-        internal static void BuildInitial()
-        {
-            Flight fl1 = new Flight(new DateTime (2016,06,10,18,00,00),new DateTime(2016, 06, 10, 20, 00, 00),new DateTime(2016, 06, 10, 20, 00, 00),1,"Kyiv","Stambul","Ukrainian airlines", "D", statusEnum.arrived,"1A");
-            Flight fl2 = new Flight(new DateTime(2016, 07, 25, 19, 00, 00), new DateTime(2016, 07, 25, 21, 00, 00), 2, "Stambul", "Kyiv", "Turkish airlines", "D", statusEnum.expectedAt, "2A");
-            Flight fl3 = new Flight(new DateTime(2016, 08, 10, 20, 00, 00), new DateTime(2016, 06, 10, 20, 00, 00), 3, "Kyiv", "San-Francisco", "Ukrainian airlines", "C", statusEnum.inFlight, "3A");
-
-            flightList.AddValues(fl1, fl2, fl3);
- //         flightList.AddRange(new Flight[] {fl1,fl2,fl3});
- 
-        }
-
-        public static void AddValues<T>(this List<T> list, params T[]values)
+            else
             {
-                list.AddRange(values);
+                Console.WriteLine("No records to show");
             }
-        
+            Console.WriteLine(returnMes);
+        }
 
 
+        internal static string Emergency(emergencyEnum emergency)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("Attention!/nEmergency message:\n");
+            switch (emergency)
+            {
+                case emergencyEnum.evacuation:
+                    sb.Append("You need to evacuate from the plane immediatelly.\nReasons are not inportant");
+                    break;
+                case emergencyEnum.fire:
+                    sb.Append("The plane is fired");
+                    break;
+                case emergencyEnum.terrorist:
+                    sb.Append("We are attacking by terrorists, \nLet's roll it\n Kill them all and let God sort them out");
+                    break;
+                case emergencyEnum.ufo:
+                    sb.Append("Unknown flyighing object is detecting, \nBe ready to interstellar contact...");
+                    break;
+                default:
+                    sb.Append("You need to evacuate to unknown reason");
+                    break;
+            }
 
+            return sb.ToString();
+        }
     }
 }

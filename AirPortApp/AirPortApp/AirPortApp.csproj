@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Flights.cs" />
     <Compile Include="Flight.cs" />
+    <Compile Include="Helper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
