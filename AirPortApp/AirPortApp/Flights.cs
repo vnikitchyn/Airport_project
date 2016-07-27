@@ -54,31 +54,31 @@ namespace AirPortApp
             Console.WriteLine("Airline company...");
             string airline = Console.In.ReadLine();
 
-            Console.WriteLine("Time of departure in format 'yyyy-MM-dd hh-mm' ...");
+            Console.WriteLine("Time of departure in format 'yyyy-MM-dd HH-mm' ...");
             string timeDS = Console.In.ReadLine();
             DateTime timeD;
-            while (DateTime.TryParseExact(timeDS, "yyyy-MM-dd hh-mm", null, System.Globalization.DateTimeStyles.AssumeUniversal, out timeD)==false)           
+            while (DateTime.TryParseExact(timeDS, "yyyy-MM-dd HH-mm", null, System.Globalization.DateTimeStyles.AssumeUniversal, out timeD)==false)           
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Sorry, this date is mandatory, please enter values time of departure again \nPlease be carefull about format 'yyyy-MM-dd hh-mm' (you previously entered '{0}')", timeDS);
+                Console.WriteLine("Sorry, this date is mandatory, please enter values time of departure again \nPlease be carefull about format 'yyyy-MM-dd HH-mm' (you previously entered '{0}')", timeDS);
                 Console.ForegroundColor = ConsoleColor.DarkBlue;
                 timeDS = Console.In.ReadLine();
             }
 
-            Console.WriteLine("Planned (expected) time of arrival 'yyyy-MM-dd hh-mm'...");
+            Console.WriteLine("Planned (expected) time of arrival 'yyyy-MM-dd HH-mm'...");
             string timeES = Console.In.ReadLine();
             DateTime timeE;
-            while (DateTime.TryParseExact(timeES, "yyyy-MM-dd hh-mm", null, System.Globalization.DateTimeStyles.AssumeUniversal, out timeE) == false)
+            while (DateTime.TryParseExact(timeES, "yyyy-MM-dd HH-mm", null, System.Globalization.DateTimeStyles.AssumeUniversal, out timeE) == false)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Sorry, this date is mandatory, please enter values expected time of arrival again \nPlease be carefull about format 'yyyy-MM-dd hh-mm' (you previously entered '{0}')", timeES);
+                Console.WriteLine("Sorry, this date is mandatory, please enter values expected time of arrival again \nPlease be carefull about format 'yyyy-MM-dd HH-mm' (you previously entered '{0}')", timeES);
                 Console.ForegroundColor = ConsoleColor.DarkBlue;
                 timeES = Console.In.ReadLine();
             }
-            Console.WriteLine("If the plane is arrived already, please enter time of arrival 'yyyy-MM-dd hh-mm' \nYou can skip this parameter by entering no value...");
+            Console.WriteLine("If the plane is arrived already, please enter time of arrival 'yyyy-MM-dd HH-mm' \nYou can skip this parameter by entering no value...");
             string timeAS = Console.In.ReadLine();
             DateTime timeA;
-            DateTime.TryParseExact(timeAS, "yyyy-MM-dd hh-mm", null, System.Globalization.DateTimeStyles.AssumeUniversal, out timeA);            
+            DateTime.TryParseExact(timeAS, "yyyy-MM-dd HH-mm", null, System.Globalization.DateTimeStyles.AssumeUniversal, out timeA);            
 
  //         Console.WriteLine("Status. Please note it could be only one of below:\n{0}...",string.Join(" \n",statusArray));
             Console.WriteLine("Status. Please note it could be only one of the specified list:\n Pease enter 0-8, based on the status values below");
@@ -202,15 +202,18 @@ namespace AirPortApp
                 double timeDdelta = (flight.TimeDeparture - date).TotalHours;
                 double timeAdelta = (flight.TimeArrival - date).TotalHours;
                 double timeEdelta = (flight.TimeExpected - date).TotalHours;
-                bool timeCheck = (timeAdelta>1||timeAdelta<1 || timeDdelta < 1 || timeDdelta < 1 || timeEdelta < 1 || timeEdelta < 1);
+                bool timeCheck = (timeAdelta>1||timeAdelta<1 || timeDdelta < 1 || timeDdelta > 1 || timeEdelta < 1 || timeEdelta > 1);
                 if (airport.Equals(flight.PortDeparture)||airport.Equals(flight.PortArrival)&&timeCheck)
                 {
-                    flight.ToString();
+                    Console.Write(flight.ToString());
                     find = true;
                 }
             }
             if (find == false)
+            {
                 Console.WriteLine("Such flights are not found");
+                Console.WriteLine(returnMesFind);
+            }
             else
             {
                 Console.WriteLine(returnMesFind);
@@ -275,7 +278,6 @@ namespace AirPortApp
                     sb.Append("You need to evacuate to unknown reason");
                     break;
             }
-
             return sb.ToString();
         }
     }
