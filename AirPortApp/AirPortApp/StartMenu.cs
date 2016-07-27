@@ -10,7 +10,7 @@ using static AirPortApp.Flights;
 
 namespace AirPortApp
 {
-    public static class StartMenu
+    internal static class StartMenu
     {
       internal  static void Choices(string input)
         {

@@ -14,7 +14,7 @@ namespace AirPortApp
         static void Main(string[] args)
         {
             if (flightList.Any() == false)
-                Helper.BuildInitial();
+            Helper.BuildInitial();
             Wellcome();
             string input = Console.ReadLine();
             Choices(input);
