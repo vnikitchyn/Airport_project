@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
 namespace AirPortApp
 {
     [Table("flight")]
@@ -24,8 +23,8 @@ namespace AirPortApp
         public Flights.statusEnum StatusE { get; set; } // status        
         public string Status { get; set; }
         public string Gate { get; set; } // gate
-        [Key]
-        public int id { get; set; } // flight id internal
+        [Key ]
+        public int Id { get; set; } // flight id internal
         public virtual List<Ticket> Tickets { get; set; }
 
 

@@ -8,21 +8,21 @@ using System.Threading.Tasks;
 
 namespace AirPortApp
 {   
-    [Table ("tickets") ]
+    [Table ("tickets")]
     internal class Ticket
     {
-        public Flight Flight { get; set; }      //Flight
-        public int Number { get; set; }   // number
-        public string Name { get; set; }  //Name of passenger
+        public Flight Flight { get; set; }  //Flight
+        public int Number { get; set; }     // number
+        public string Name { get; set; }    //Name of passenger
         public string Surname { get; set; } // Surname of passenger
-        public int Passport { get; set; } // Passport of passenger
+        public int Passport { get; set; }   // Passport of passenger
         public double Price { get; set; }   // price
         [Key]
-        public int id { get; set; } // ticket id internal
+        public int Id { get; set; } // ticket id internal
+       // [ForeignKey("FlightId")]
+        //public int FlightId { get; set; } // ticket id internal
 
         public virtual List<Flight> Flights { get; set; }
-
-
 
         public override string ToString()
         {
@@ -46,6 +46,5 @@ namespace AirPortApp
             Passport = passport;
             Price = price;
         }
-
     }
 }

@@ -24,6 +24,13 @@ namespace AirPortApp
                         input = Console.ReadLine();
                         break;
 
+                    case "addsql":
+                        Console.WriteLine("You chose addSQL option.");
+                        Flight fl23 = new Flight(new DateTime(2016, 06, 10, 18, 00, 00), new DateTime(2016, 06, 10, 20, 00, 00), new DateTime(2016, 06, 10, 20, 00, 00), 1, "Kyiv", "Stambul", "Ukrainian airlines", "D", statusEnum.arrived, "1A");
+                        SQLoper.Add(fl23);
+                        input = Console.ReadLine();
+                        break;
+
                     case "showall":
                         Console.WriteLine("You chose show all option.");
                         ShowAll();
@@ -199,7 +206,7 @@ namespace AirPortApp
             MessageBox.Show(wellcome + "\n" + wellcomeConsole, caption, MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             Console.Title = "Airport application";
-            Console.WindowWidth = 150;
+            Console.WindowWidth = 100;
             Console.WriteLine(wellcomeConsole);
         }
     }
