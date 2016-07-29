@@ -57,12 +57,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DBContextA.cs" />
     <Compile Include="Flights.cs" />
-    <Compile Include="Flight.cs" />
+    <Compile Include="models\Flight.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SQLoper.cs" />
     <Compile Include="StartMenu.cs" />
+    <Compile Include="models\Ticket.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

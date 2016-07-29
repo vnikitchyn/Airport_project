@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace AirPortApp
 {
+    [Table("flight")]
     internal class Flight
     { 
         #region properties and fields: all string except Number
@@ -21,6 +24,10 @@ namespace AirPortApp
         public Flights.statusEnum StatusE { get; set; } // status        
         public string Status { get; set; }
         public string Gate { get; set; } // gate
+        [Key]
+        public int id { get; set; } // flight id internal
+        public virtual List<Ticket> Tickets { get; set; }
+
 
         public override string ToString()
         {
@@ -85,7 +92,6 @@ namespace AirPortApp
             Gate = gate;
         }
 
-
         internal Flight(int number, string portA, string portD, string airline, Flights.statusEnum statusE)
         {
             Number = number;
@@ -95,6 +101,7 @@ namespace AirPortApp
             StatusE = statusE;
             Status = StatusStringEnricher(statusE);
         }
+
         Flight(int number, Flights.statusEnum statusE)
         {
             Number = number;
@@ -102,7 +109,8 @@ namespace AirPortApp
             Status = StatusStringEnricher(statusE);
         }
 
-
+        internal Flight()
+        { }
 
         string StatusStringEnricher(Flights.statusEnum se)
         {
