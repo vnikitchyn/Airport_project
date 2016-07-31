@@ -1,19 +1,13 @@
-﻿using System.Data.Entity;
-
-
+﻿
+using System.Data.Entity;
 
 
 namespace AirPortApp
 {
 
-
-
-
-
-
-    internal class DBContextA : DbContext
+    public class AirportDB : DbContext
     {     
-        internal DbSet<Flight> Flights { get; set; }
-        internal DbSet<Ticket> Tickets { get; set; }
+        public DbSet<Flight> Flights { get; set; }
+        public DbSet<Ticket> Tickets { get; set; }
     }
 }

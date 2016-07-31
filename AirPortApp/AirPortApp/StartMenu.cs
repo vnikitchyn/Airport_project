@@ -24,10 +24,16 @@ namespace AirPortApp
                         input = Console.ReadLine();
                         break;
 
-                    case "addsql":
+
+                    case "savesqlticket":
                         Console.WriteLine("You chose addSQL option.");
-                        Flight fl23 = new Flight(new DateTime(2016, 06, 10, 18, 00, 00), new DateTime(2016, 06, 10, 20, 00, 00), new DateTime(2016, 06, 10, 20, 00, 00), 1, "Kyiv", "Stambul", "Ukrainian airlines", "D", statusEnum.arrived, "1A");
-                        SQLoper.Add(fl23);
+                        SQLoper.AddTickets(Tickets.TicketsList);
+                        input = Console.ReadLine();
+                        break;
+
+                    case "savesqlflight":
+                        Console.WriteLine("You chose addSQL option.");
+                        SQLoper.AddFlights(flightList);
                         input = Console.ReadLine();
                         break;
 

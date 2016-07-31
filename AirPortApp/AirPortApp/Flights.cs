@@ -196,12 +196,18 @@ namespace AirPortApp
         //–search of the flight which is the nearest (1 hour) to the specified time to/from the specified port and output information sorted by time
         internal static void FindNear(DateTime date, string airport)
         {
+            DateTime TimeArrivalCast;
             bool find = false;
             foreach (Flight flight in flightList)
             {
                 double timeDdelta = (flight.TimeDeparture - date).TotalHours;
-                double timeAdelta = (flight.TimeArrival - date).TotalHours;
                 double timeEdelta = (flight.TimeExpected - date).TotalHours;
+                  if (!flight.TimeArrival.Equals(null))
+                     TimeArrivalCast = (DateTime) flight.TimeArrival;
+                  else
+                    TimeArrivalCast = new DateTime(1,1,1);
+                double timeAdelta = (TimeArrivalCast - date).TotalHours;
+
                 bool timeCheck = (timeAdelta>1||timeAdelta<1 || timeDdelta < 1 || timeDdelta > 1 || timeEdelta < 1 || timeEdelta > 1);
                 if (airport.Equals(flight.PortDeparture)||airport.Equals(flight.PortArrival)&&timeCheck)
                 {

@@ -2,17 +2,34 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static AirPortApp.Flights;
 
 namespace AirPortApp
 {
-    [Table("flight")]
-    internal class Flight
-    { 
+
+    [Table("Flights")]
+    public class Flight
+    {
         #region properties and fields: all string except Number
-        public DateTime TimeArrival {get;set; }      //date and time of arrival
+
+        private DateTime? timeArrival;
+        public DateTime? TimeArrival
+        {
+          get
+            {
+                if (timeArrival < (DateTime)SqlDateTime.MinValue)
+                    timeArrival = null;                
+                return timeArrival;
+            }
+            set
+            {  timeArrival = value; }
+        }
+
+        //date and time of arrival
         public DateTime TimeDeparture { get; set; }  //date and time of departure
         public DateTime TimeExpected { get; set; } // TimeExpected
         public int Number    { get; set; }   //flight number
@@ -20,19 +37,22 @@ namespace AirPortApp
         public string PortDeparture { get; set; }     //city/port of arrival(departure)
         public string Airline { get; set; }  //Airline company
         public string Terminal { get; set; } // Terminal
-        public Flights.statusEnum StatusE { get; set; } // status        
+        [NotMapped]
+        public statusEnum StatusE { get; set; } // status   enum is ignored by database.     
         public string Status { get; set; }
         public string Gate { get; set; } // gate
         [Key ]
-        public int Id { get; set; } // flight id internal
+        public int FlightId { get; set; } // flight id internal
         public virtual List<Ticket> Tickets { get; set; }
 
+   
 
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            if (!TimeArrival.Day.Equals(01))
+            if (!TimeArrival.Equals(null))
             {
+                DateTime TimeArrivalCast= (DateTime) TimeArrival;
                 sb.Append("-------\n").
                    Append("Number: ").Append(Number)
                   .Append("\nPortArrival: ").Append(PortArrival)
@@ -41,7 +61,7 @@ namespace AirPortApp
                   .Append("\nStatus: ").Append(Status)
                   .Append("\nTimeDeparture: ").Append(TimeDeparture.ToString("yyyy-MM-dd hh-mm"))
                   .Append("\nTimeExpected: ").Append(TimeExpected.ToString("yyyy-MM-dd hh-mm"))
-                  .Append("\nTimeArrival: ").Append(TimeArrival.ToString("yyyy-MM-dd hh-mm"))
+                  .Append("\nTimeArrival: ").Append(TimeArrivalCast.ToString("yyyy-MM-dd hh-mm"))
                   .Append("\nTerminal: ").Append(Terminal)
                   .Append("\nGate: ").Append(Gate);
             }
@@ -63,6 +83,9 @@ namespace AirPortApp
         }
 
         #endregion
+
+        public Flight()
+        { }
 
         internal Flight(DateTime timeD, DateTime timeE, DateTime timeA, int number, string portD, string portA, string airline, string terminal, Flights.statusEnum statusE, string gate){
             TimeDeparture = timeD;
@@ -108,8 +131,6 @@ namespace AirPortApp
             Status = StatusStringEnricher(statusE);
         }
 
-        internal Flight()
-        { }
 
         string StatusStringEnricher(Flights.statusEnum se)
         {
