@@ -23,19 +23,79 @@ namespace AirPortApp
                         Input();
                         input = Console.ReadLine();
                         break;
-
-
-                    case "savesqlticket":
+                    case "savesqltickets":
                         Console.WriteLine("You chose addSQL option.");
+                        if (flightList.Any() == false)
+                        {
+                            SQLoper.AllFlightsToList();
+                        }
+                        Ticket t1 = new Ticket(flightList.ElementAt(0), 1, "Bill", "Gates", "AM00001", 1500.56);
+                        Ticket t2 = new Ticket(flightList.ElementAt(1), 2, "Fam", "Nuven", 1500.56);
+                        Ticket t3 = new Ticket(flightList.ElementAt(1), 3, "Alan", "Turing", "EO4545", 1500.56);
+                        Ticket t4 = new Ticket(flightList.ElementAt(2), 4, "James", "Bond", "54535", 511);
+                        Ticket t5 = new Ticket(flightList.ElementAt(2), 5, "Andy", "Wozniak", "234", 54666);
+                        Ticket t6 = new Ticket(flightList.ElementAt(2), 7, "Nemo", "Captain", "345555", 100.56);
+                        Ticket t7 = new Ticket(flightList.ElementAt(2), 8, "Mouse", "Eldgernon", "666623", 15.56);
+                        Ticket t8 = new Ticket(flightList.ElementAt(3), 9, "Hilary", "Klinton", "456772", 500.14);
+                        Ticket t9 = new Ticket(flightList.ElementAt(3), 10, "Gney", "Pompey", "AM00001", 1.56);
+                        Ticket t10 = new Ticket(flightList.ElementAt(3), 11, "Sherlock", "Holmes", "34856434", 1000.00);
+                        Tickets.TicketsList.AddValuesToList(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10);
+
                         SQLoper.AddTickets(Tickets.TicketsList);
                         input = Console.ReadLine();
                         break;
 
-                    case "savesqlflight":
+                    case "savesqlflights":
                         Console.WriteLine("You chose addSQL option.");
                         SQLoper.AddFlights(flightList);
                         input = Console.ReadLine();
                         break;
+
+                    case "sqlfindfo":
+                        Console.WriteLine("You chose addSQL option.");
+                        input = Console.ReadLine();
+                        int numberF;
+                        int.TryParse(input, out numberF);
+                        SQLoper.FindSQLFlightOnly(numberF);
+                        input = Console.ReadLine();
+                        break;
+
+
+                    case "sqlfindf":
+                        Console.WriteLine("You chose addSQL option.");
+                        input = Console.ReadLine();
+                        int.TryParse(input, out numberF);
+                        SQLoper.FindSQLFlight(numberF);
+                        input = Console.ReadLine();
+                        break;
+                    case "sqlAllfl":
+                        Console.WriteLine("You chose addSQL option.");
+                        SQLoper.FindSQLFlightWithTickets();
+                        input = Console.ReadLine();
+                        break;
+
+                    case "sqlremove":
+                        Console.WriteLine("You chose addSQL option.");
+                        input = Console.ReadLine();
+                        int.TryParse(input, out numberF);
+                        SQLoper.Remove(numberF);
+                        input = Console.ReadLine();
+                        break;
+
+
+
+                    case "savesqlticket":
+                        Console.WriteLine("You chose addSQL option.");
+                        if (flightList.Any() == false)
+                        {
+                            SQLoper.AllFlightsToList();
+                        }
+                        Ticket t11 = new Ticket(flightList.ElementAt(1), 3, "Alan", "Turing", "AM00001", 1500.56);
+                        SQLoper.AddTicket(t11);
+                        input = Console.ReadLine();
+                        break;
+
+
 
                     case "showall":
                         Console.WriteLine("You chose show all option.");

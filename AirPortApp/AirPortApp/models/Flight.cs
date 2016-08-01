@@ -31,7 +31,7 @@ namespace AirPortApp
 
         //date and time of arrival
         public DateTime TimeDeparture { get; set; }  //date and time of departure
-        public DateTime TimeExpected { get; set; } // TimeExpected
+        public DateTime TimeExpected { get; set; } // TimeExpected  
         public int Number    { get; set; }   //flight number
         public string PortArrival { get; set; }     //city/port of arrival(departure)
         public string PortDeparture { get; set; }     //city/port of arrival(departure)
@@ -89,6 +89,7 @@ namespace AirPortApp
 
         internal Flight(DateTime timeD, DateTime timeE, DateTime timeA, int number, string portD, string portA, string airline, string terminal, Flights.statusEnum statusE, string gate){
             TimeDeparture = timeD;
+            TimeExpected = timeE;
             TimeArrival = timeA;
             Number = number;
             PortArrival = portA;

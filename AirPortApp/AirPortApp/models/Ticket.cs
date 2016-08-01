@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace AirPortApp
 {   
     [Table ("Tickets")]
-    public class Ticket
+    public class Ticket : IComparable <Ticket>
     {
         public int Number { get; set; }     // number
         [StringLength(15)]
@@ -39,6 +39,7 @@ namespace AirPortApp
         internal Ticket(Flight flight, int number, string name, string surname, string passport, double price)
         {
             Flight = flight;
+            FlightId = Flight.FlightId;
             Number = number;
             Name = name;
             Surname = surname;
@@ -48,6 +49,7 @@ namespace AirPortApp
         internal Ticket(Flight flight, int number, string name, string surname, double price)
         {
             Flight = flight;
+            FlightId = Flight.FlightId;
             Number = number;
             Name = name;
             Surname = surname;
@@ -79,7 +81,14 @@ namespace AirPortApp
             return sb.ToString();
         }
 
-
-
+        public int CompareTo(Ticket other) //Comparable
+        {
+            if (Price > other.Price)
+                return 1;
+            if (this.Price < other.Price)
+                return -1;
+            else
+                return 0;
+        }
     }
 }

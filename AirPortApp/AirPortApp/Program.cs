@@ -13,10 +13,11 @@ namespace AirPortApp
     {
         static void Main(string[] args)
         {
-            if (flightList.Any() == false)
-            Helper.BuildInitialFlights();
+            //            if (flightList.Any() == false)
+            if (SQLoper.CountAllFlights() <= 0)
+                Helper.BuildInitialFlights();
             if (SQLoper.CountAllTickets()<=0)
-         //       Helper.BuildInitialTickets();
+                Helper.BuildInitialTickets();
             Wellcome();
             string input = Console.ReadLine();
             Choices(input);

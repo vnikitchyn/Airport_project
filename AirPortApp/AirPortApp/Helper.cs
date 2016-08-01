@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static AirPortApp.Flights;
+using static AirPortApp.Tickets;
+using static AirPortApp.SQLoper;
 
 namespace AirPortApp
 {
@@ -26,7 +28,7 @@ namespace AirPortApp
         internal static void BuildInitialTickets()
         {
             if (flightList.Any() == false) {
-                Helper.BuildInitialFlights(); }
+                AllFlightsToList(); }
             Ticket t1, t2, t3, t4, t5, t6, t7, t8, t9, t10;
             t1 = new Ticket(flightList.ElementAt(0), 1, "Bill", "Gates", "AM00001", 1500.56);
             t2 = new Ticket(flightList.ElementAt(1), 2, "Fam", "Nuven", 1500.56);
@@ -34,11 +36,11 @@ namespace AirPortApp
             t4 = new Ticket(flightList.ElementAt(2), 4, "James", "Bond", "AM00001", 511);
             t5 = new Ticket(flightList.ElementAt(2), 5, "Andy", "Wozniak", "AM00001", 54666);
             t6 = new Ticket(flightList.ElementAt(2), 7, "Nemo", "Captain", "AM00001", 100.56);
-            t7 = new Ticket(flightList.ElementAt(2), 8, "", "Eldgernon", "AM00001", 15.56);
+            t7 = new Ticket(flightList.ElementAt(2), 8, "Mouse", "Eldgernon", "AM00001", 15.56);
             t8 = new Ticket(flightList.ElementAt(3), 9, "Hilary", "Klinton", "AM00001", 500.14);
             t9 = new Ticket(flightList.ElementAt(3), 10, "Gney", "Pompey", "AM00001", 1.56);
             t10 = new Ticket(flightList.ElementAt(3), 11, "Sherlock", "Holmes", "AM00001", 1000.00);
-            Tickets.TicketsList.AddValuesToList(t1,t2,t3,t4,t5,t6,t7,t8,t9,t10);
+            TicketsList.AddValuesToList(t1,t2,t3,t4,t5,t6,t7,t8,t9,t10);
             //Tickets.TicketsList.AddRange(new Ticket[] { t1,t2,t3,t4,t5,t6,t7,t8,t9,t10});
         }
 

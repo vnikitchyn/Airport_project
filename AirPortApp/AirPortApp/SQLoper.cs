@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static AirPortApp.Flights;
+using static AirPortApp.Tickets;
+
 
 namespace AirPortApp
 {
@@ -22,6 +25,21 @@ namespace AirPortApp
                     db.Flights.Remove(flight);
                 }
                 db.SaveChanges();
+            }
+        }
+
+        internal static void AllFlightsToList()
+        {
+            using (var db = new AirportDB())
+            {
+                flightList=db.Flights.ToList<Flight>();
+            }
+        }
+        internal static void AllTicketsToList()
+        {
+            using (var db = new AirportDB())
+            {
+                TicketsList = db.Tickets.ToList<Ticket>();
             }
         }
 
@@ -61,7 +79,8 @@ namespace AirPortApp
         internal static void AddTicket(Ticket ticket)
         {
             using (var db = new AirportDB())
-            {             
+            {
+             //   ticket.Flight = f;
                 db.Tickets.Add(ticket);
                 db.SaveChanges();
             }
@@ -97,8 +116,8 @@ namespace AirPortApp
                var filtered =
                     from flight in allFlights
                     join ticket in allTickets on flight.FlightId equals ticket.FlightId into grouped
-                    //                    where flight.Number == number                   
-                    select  grouped.DefaultIfEmpty(new Ticket() { Name = string.Empty, FlightId = flight.FlightId }); 
+                                        where flight.Number == number                   
+                    select  grouped.DefaultIfEmpty(new Ticket() { Name = string.Empty, Number = 0, Surname=string.Empty,  Flight = flight}); 
 
 
                 foreach ( var flickets in filtered)
@@ -124,7 +143,7 @@ namespace AirPortApp
                     select flight;
                 foreach (Flight flight in filtered)
                 {
-                    Console.WriteLine("{0}n\",flight");
+                    Console.WriteLine("{0}n\",flight",flight.ToString());
                 }
             }
 
