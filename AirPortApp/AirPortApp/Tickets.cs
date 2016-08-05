@@ -10,8 +10,9 @@ namespace AirPortApp
 {
    public static class Tickets
     {
-              public static List<Ticket> TicketsList { get; set; }
-              
+        public static List<Ticket> TicketsList { get; set; }
+
+
         internal static void FindT(int number) //IEnumerator
         {
             bool find = false;

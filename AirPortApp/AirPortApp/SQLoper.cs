@@ -12,7 +12,7 @@ namespace AirPortApp
 {
     internal static class SQLoper
     {
-        internal static void Remove(int num)
+        internal static void RemoveFlight(int num)
         {
             using (var db = new AirportDB())
             {
@@ -72,19 +72,29 @@ namespace AirPortApp
                 //}
                 db.Tickets.AddRange(tickets);
                 db.SaveChanges();
-//             foreach (Ticket ticket in tickets) { AddTicket(ticket, flight);}   //alt realization, do not know what is the best. This one calling to db every ticket.
+//             foreach (Ticket ticket in tickets) { AddTicket(ticket, flight);}   //alt realization, do not know what is the best.
             }
         }
 
-        internal static void AddTicket(Ticket ticket)
+
+
+        internal static void AddTicket(Ticket ticket, int flightNumber) // worked method!
         {
             using (var db = new AirportDB())
             {
-             //   ticket.Flight = f;
+                int flId = FindSQLFlightID(flightNumber);
+                if (flId > 0)
+                {
+                    ticket.Flight = null;
+                    ticket.FlightId = flId;
+                }
                 db.Tickets.Add(ticket);
+                //db.Flights.Attach(flight);
+                //ticket.Flight = flight;
                 db.SaveChanges();
             }
         }
+
 
         internal static void FindSQLFlightWithTickets()
         {
@@ -94,13 +104,13 @@ namespace AirPortApp
                 List<Flight> allFlights = db.Flights.ToList<Flight>();
                 List<Ticket> allTickets = db.Tickets.ToList<Ticket>();
 
-                IEnumerable<Flight> filtered =
-                    from flight in allFlights
-                    join ticket in allTickets on flight.FlightId equals ticket.FlightId
-                    select flight;
-                foreach (Flight flight in filtered)
+                IEnumerable<dynamic> flickets =
+                    from t in  allTickets
+                    join f in allFlights  on t.FlightId equals f.FlightId
+                    select new { FlightNumber = f.Number, f.Airline,  f.PortArrival, f.PortDeparture, f.Status, f.Terminal,f.Gate, Departure=f.TimeDeparture,ETA=f.TimeExpected,ATA=f.TimeArrival, t.Name,t.Surname,FullName=string.Format("{0} {1}",t.Name,t.Surname),t.Price, t.Passport,TicketNumber = t.Number};
+                foreach (dynamic flicket in flickets)
                 {
-                    Console.WriteLine("Totally flights with tickets: {0} \n{1}\n",filtered.Count(),flight.ToString());
+                    Console.WriteLine("Totally flights with tickets: {0} \n{1}\n", flickets.Count(),flicket.ToString());
                 }
             }
         }
@@ -115,7 +125,7 @@ namespace AirPortApp
 
                var filtered =
                     from flight in allFlights
-                    join ticket in allTickets on flight.FlightId equals ticket.FlightId into grouped
+                    join ticket in allTickets on flight.FlightId equals ticket.Flight.FlightId into grouped
                                         where flight.Number == number                   
                     select  grouped.DefaultIfEmpty(new Ticket() { Name = string.Empty, Number = 0, Surname=string.Empty,  Flight = flight}); 
 
@@ -146,8 +156,25 @@ namespace AirPortApp
                     Console.WriteLine("{0}n\",flight",flight.ToString());
                 }
             }
+        }
+
+
+        internal static int FindSQLFlightID(int number)
+        {
+            using (var db = new AirportDB())
+            {
+                List<Flight> allFlights = db.Flights.ToList<Flight>();
+                IEnumerable<Flight> filtered =
+                    from flight in allFlights
+                    where flight.Number == number
+                    select flight;
+                if (filtered.Any())
+                    return filtered.FirstOrDefault().FlightId;
+                else return 0;
+            }
 
         }
+
 
         internal static int CountAllFlights ()
         {

@@ -25,9 +25,8 @@ namespace AirPortApp
         [Column(Order = 1)]
         public int TicketId { get; set; } // ticket id internal
 
+        [ForeignKey("Flight")]
         public int FlightId { get; set; } // ticket id internal
-        [ForeignKey("FlightId")]
-        [Column(Order = 2)]
         public Flight Flight { get; set; }  //Flight
 
         
@@ -39,7 +38,6 @@ namespace AirPortApp
         internal Ticket(Flight flight, int number, string name, string surname, string passport, double price)
         {
             Flight = flight;
-            FlightId = Flight.FlightId;
             Number = number;
             Name = name;
             Surname = surname;
@@ -49,7 +47,6 @@ namespace AirPortApp
         internal Ticket(Flight flight, int number, string name, string surname, double price)
         {
             Flight = flight;
-            FlightId = Flight.FlightId;
             Number = number;
             Name = name;
             Surname = surname;

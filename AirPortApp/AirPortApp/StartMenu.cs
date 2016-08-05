@@ -25,22 +25,12 @@ namespace AirPortApp
                         break;
                     case "savesqltickets":
                         Console.WriteLine("You chose addSQL option.");
-                        if (flightList.Any() == false)
+                        if (!flightList.Any())
                         {
                             SQLoper.AllFlightsToList();
                         }
-                        Ticket t1 = new Ticket(flightList.ElementAt(0), 1, "Bill", "Gates", "AM00001", 1500.56);
-                        Ticket t2 = new Ticket(flightList.ElementAt(1), 2, "Fam", "Nuven", 1500.56);
-                        Ticket t3 = new Ticket(flightList.ElementAt(1), 3, "Alan", "Turing", "EO4545", 1500.56);
-                        Ticket t4 = new Ticket(flightList.ElementAt(2), 4, "James", "Bond", "54535", 511);
-                        Ticket t5 = new Ticket(flightList.ElementAt(2), 5, "Andy", "Wozniak", "234", 54666);
-                        Ticket t6 = new Ticket(flightList.ElementAt(2), 7, "Nemo", "Captain", "345555", 100.56);
-                        Ticket t7 = new Ticket(flightList.ElementAt(2), 8, "Mouse", "Eldgernon", "666623", 15.56);
-                        Ticket t8 = new Ticket(flightList.ElementAt(3), 9, "Hilary", "Klinton", "456772", 500.14);
-                        Ticket t9 = new Ticket(flightList.ElementAt(3), 10, "Gney", "Pompey", "AM00001", 1.56);
-                        Ticket t10 = new Ticket(flightList.ElementAt(3), 11, "Sherlock", "Holmes", "34856434", 1000.00);
-                        Tickets.TicketsList.AddValuesToList(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10);
-
+                        if (Tickets.TicketsList==null)
+                            Helper.BuildInitialTickets();
                         SQLoper.AddTickets(Tickets.TicketsList);
                         input = Console.ReadLine();
                         break;
@@ -78,10 +68,9 @@ namespace AirPortApp
                         Console.WriteLine("You chose addSQL option.");
                         input = Console.ReadLine();
                         int.TryParse(input, out numberF);
-                        SQLoper.Remove(numberF);
+                        SQLoper.RemoveFlight(numberF);
                         input = Console.ReadLine();
                         break;
-
 
 
                     case "savesqlticket":
@@ -90,11 +79,10 @@ namespace AirPortApp
                         {
                             SQLoper.AllFlightsToList();
                         }
-                        Ticket t11 = new Ticket(flightList.ElementAt(1), 3, "Alan", "Turing", "AM00001", 1500.56);
-                        SQLoper.AddTicket(t11);
+                        Ticket t12 = new Ticket(flightList.ElementAt(1), 3, "Alan", "Turing", "AM00001", 1500.56);
+                        SQLoper.AddTicket(t12,4);
                         input = Console.ReadLine();
                         break;
-
 
 
                     case "showall":
