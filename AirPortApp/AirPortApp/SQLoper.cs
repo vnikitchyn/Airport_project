@@ -235,6 +235,7 @@ namespace AirPortApp
         internal static void FindSQLFlight(int number) {
             IEnumerable<dynamic> flickets =
         from f in AllFlightsToList()
+        where f.Number.Equals(number)
         join t in AllTicketsToList() on f.FlightId equals t.FlightId into ticketsfl
         from ft in ticketsfl.DefaultIfEmpty(new Ticket {FlightId=0, Number=0, Place="", Price =0, TicketId=0})
         join p in passList on ft.PassId equals p.PassId into ticketsflp
