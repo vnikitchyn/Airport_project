@@ -35,14 +35,14 @@ namespace AirPortApp
             }
         }
 
-        internal static void FindName(string name, string surname) //Enumerable
+        internal static void FindName(double price, int number) //Enumerable
         {
             bool find = false;
             var tickets = TicketsList.AsEnumerable<Ticket>();
 
             foreach (Ticket ticket in tickets)
             {
-                if (name.Equals(ticket.Name)&&surname.Equals(ticket.Surname))
+                if (price.Equals(ticket.Price)&&number.Equals(ticket.Number))
                     Console.WriteLine(ticket.ToString());
                 find = true;
             }

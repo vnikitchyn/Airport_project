@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using static AirPortApp.Flights;
 using static AirPortApp.Tickets;
+using static AirPortApp.Passengers;
+
 
 
 namespace AirPortApp
@@ -17,9 +19,9 @@ namespace AirPortApp
             using (var db = new AirportDB())
             {
                 List<Flight> allDbFlights = db.Flights.ToList<Flight>();
-                var filteredFlights = from st in allDbFlights
-                                      where st.Number == num
-                                      select st;
+                var filteredFlights = from f in allDbFlights
+                                      where f.Number == num
+                                      select f;
                 foreach (Flight flight in filteredFlights)
                 {
                     db.Flights.Remove(flight);
@@ -28,19 +30,65 @@ namespace AirPortApp
             }
         }
 
-        internal static void AllFlightsToList()
+
+        internal static void RemoveTicket(int num)
         {
             using (var db = new AirportDB())
             {
-                flightList=db.Flights.ToList<Flight>();
+                List<Ticket> allDbTickets = db.Tickets.ToList<Ticket>();
+                var filtered = from t in allDbTickets
+                                      where t.Number == num
+                                      select t;
+                foreach (Ticket tr in filtered)
+                {
+                    db.Tickets.Remove(tr);
+                }
+                db.SaveChanges();
             }
         }
-        internal static void AllTicketsToList()
+
+
+        internal static void RemovePassenger(string passport)
         {
             using (var db = new AirportDB())
             {
-                TicketsList = db.Tickets.ToList<Ticket>();
+                List<Passenger> allpas = db.Passengers.ToList<Passenger>();
+                var filtered = from p in allpas
+                                      where p.Passport.Equals(passport)
+                                      select p;
+                foreach (Passenger p in filtered)
+                {
+                    db.Passengers.Remove(p);
+                }
+                db.SaveChanges();
             }
+        }
+
+
+        internal static List <Flight> AllFlightsToList()
+        {
+            using (var db = new AirportDB())
+            {
+                flightList=db.Flights.ToList();
+            }
+            return flightList;
+        }
+        internal static List <Passenger> AllPassengersToList()
+        {
+            using (var db = new AirportDB())
+            {
+                passList = db.Passengers.ToList();
+            }
+            return passList;
+        }
+
+        internal static List <Ticket>  AllTicketsToList() 
+        {
+            using (var db = new AirportDB())
+            {
+                TicketsList = db.Tickets.ToList();
+            }
+            return TicketsList;
         }
 
 
@@ -52,6 +100,16 @@ namespace AirPortApp
                 db.SaveChanges();
             }
         }
+
+        internal static void AddFlight(Passenger passenger)
+        {
+            using (var db = new AirportDB())
+            {
+                db.Passengers.Add(passenger);
+                db.SaveChanges();
+            }
+        }
+
 
         internal static void AddFlights(List <Flight> flights)
         {
@@ -66,16 +124,38 @@ namespace AirPortApp
         {
             using (var db = new AirportDB())
             {
-                //foreach (Ticket ticket in tickets )
-                //{
-                //    ticket.Flight = flight;                      
-                //}
+                foreach (Ticket ticket in tickets )
+                {
+                    if (ticket.Flight.FlightId >0)
+                    ticket.Flight = null;
+                    if (ticket.Passenger.PassId > 0)
+                    ticket.Passenger = null;
+                }
                 db.Tickets.AddRange(tickets);
                 db.SaveChanges();
 //             foreach (Ticket ticket in tickets) { AddTicket(ticket, flight);}   //alt realization, do not know what is the best.
             }
         }
 
+
+        internal static void AddTicket(Ticket ticket) // worked method!
+        {
+            using (var db = new AirportDB())
+            {
+                if (ticket.Flight.FlightId > 0)
+                {
+                    ticket.FlightId = ticket.Flight.FlightId;
+                    ticket.Flight = null;
+                }
+                if (ticket.Passenger.PassId > 0)
+                {
+                    ticket.PassId = ticket.Passenger.PassId;
+                    ticket.Passenger = null;
+                }
+                db.Tickets.Add(ticket);
+                db.SaveChanges();
+            }
+        }
 
 
         internal static void AddTicket(Ticket ticket, int flightNumber) // worked method!
@@ -88,6 +168,11 @@ namespace AirPortApp
                     ticket.Flight = null;
                     ticket.FlightId = flId;
                 }
+                if (ticket.Passenger.PassId > 0)
+                {
+                    ticket.PassId = ticket.Passenger.PassId;
+                    ticket.Passenger = null;
+                }
                 db.Tickets.Add(ticket);
                 //db.Flights.Attach(flight);
                 //ticket.Flight = flight;
@@ -96,53 +181,93 @@ namespace AirPortApp
         }
 
 
-        internal static void FindSQLFlightWithTickets()
+        internal static dynamic  FindSQLFlightWithTicketsandPassengers()
         {
-            using (var db = new AirportDB())
-            {
-
-                List<Flight> allFlights = db.Flights.ToList<Flight>();
-                List<Ticket> allTickets = db.Tickets.ToList<Ticket>();
-
                 IEnumerable<dynamic> flickets =
-                    from t in  allTickets
-                    join f in allFlights  on t.FlightId equals f.FlightId
-                    select new { FlightNumber = f.Number, f.Airline,  f.PortArrival, f.PortDeparture, f.Status, f.Terminal,f.Gate, Departure=f.TimeDeparture,ETA=f.TimeExpected,ATA=f.TimeArrival, t.Name,t.Surname,FullName=string.Format("{0} {1}",t.Name,t.Surname),t.Price, t.Passport,TicketNumber = t.Number};
+                    from t in AllTicketsToList()
+                    join f in AllFlightsToList() on t.FlightId equals f.FlightId
+                    join p in passList on t.PassId equals p.PassId
+                   select new { FlightNumber = f.Number, f.Airline,  f.PortArrival,
+                       f.PortDeparture, f.Status, f.Terminal,f.Gate, Departure=f.TimeDeparture,ETA=f.TimeExpected,ATA=f.TimeArrival,
+                       t.Price,TicketNumber = t.Number,t.Place, p.Name, p.Surname, FullName = string.Format("{0} {1}", p.Name, p.Surname), p.Passport };
                 foreach (dynamic flicket in flickets)
                 {
-                    Console.WriteLine("Totally flights with tickets: {0} \n{1}\n", flickets.Count(),flicket.ToString());
+                    Console.WriteLine("Flights with tikcets: {0} \n", flicket.ToString());
                 }
-            }
+            return flickets;
         }
 
+
+        internal static dynamic FindSQLFlightWithTicketsandPassengers(int number)
+        {
+            IEnumerable<dynamic> flickets =
+                from t in AllTicketsToList()
+                join f in AllFlightsToList() on t.FlightId equals f.FlightId
+                join p in passList on t.PassId equals p.PassId
+                where t.Number == number
+                select new
+                {
+                    FlightNumber = f.Number,
+                    f.Airline,
+                    f.PortArrival,
+                    f.PortDeparture,
+                    f.Status,
+                    f.Terminal,
+                    f.Gate,
+                    Departure = f.TimeDeparture,
+                    ETA = f.TimeExpected,
+                    ATA = f.TimeArrival,
+                    t.Price,
+                    TicketNumber = t.Number,
+                    t.Place,
+                    p.Name,
+                    p.Surname,
+                    FullName = string.Format("{0} {1}", p.Name, p.Surname),
+                    p.Passport
+                };
+            foreach (dynamic flicket in flickets)
+            {
+                //Console.WriteLine("Flights with tikcets: {0} \n", flicket.ToString());
+            }
+            return flickets;
+        }
 
         internal static void FindSQLFlight(int number) {
-            using (var db = new AirportDB())
+            IEnumerable<dynamic> flickets =
+        from f in AllFlightsToList()
+        join t in AllTicketsToList() on f.FlightId equals t.FlightId into ticketsfl
+        from ft in ticketsfl.DefaultIfEmpty(new Ticket {FlightId=0, Number=0, Place="", Price =0, TicketId=0})
+        join p in passList on ft.PassId equals p.PassId into ticketsflp
+        from ftp in ticketsflp.DefaultIfEmpty(new Passenger {PassId=0, Name="",Surname="",Passport=""})
+
+        select new
+        {
+            FlightNumber = f.Number,
+            f.Airline,
+            f.PortArrival,
+            f.PortDeparture,
+            f.Status,
+            f.Terminal,
+            f.Gate,
+            Departure = f.TimeDeparture,
+            ETA = f.TimeExpected,
+            ATA = f.TimeArrival,
+            ft.Price,
+            TicketNumber = ft.Number,
+            ft.Place,
+            ftp.Name,
+            ftp.Surname,
+            FullName = string.Format("{0} {1}", ftp.Name, ftp.Surname),
+            ftp.Passport
+        };
+
+            foreach (dynamic flicket in flickets)
             {
-
-                List<Flight> allFlights = db.Flights.ToList<Flight>();
-                List<Ticket> allTickets = db.Tickets.ToList<Ticket>();
-
-               var filtered =
-                    from flight in allFlights
-                    join ticket in allTickets on flight.FlightId equals ticket.Flight.FlightId into grouped
-                                        where flight.Number == number                   
-                    select  grouped.DefaultIfEmpty(new Ticket() { Name = string.Empty, Number = 0, Surname=string.Empty,  Flight = flight}); 
-
-
-                foreach ( var flickets in filtered)
-                {
-                    Console.WriteLine("flikcet group: {0} ", flickets.Count());
-
-                    foreach (var flicket in flickets)
-                    {
-                        Console.WriteLine("{0}n\",flight. \nticket- name: {1}\tsurname:{2}\tnumber{3}",flicket.Flight.ToString(), flicket.Name,flicket.Surname, flicket.Number);
-                    }
-                }
+                Console.WriteLine("Flights with tikcets: {0} \n", flicket.ToString());
             }
         }
 
-        internal static void FindSQLFlightOnly(int number)
+        internal static IEnumerable FindSQLFlightOnly(int number)
         {
             using (var db = new AirportDB())
             {
@@ -151,11 +276,40 @@ namespace AirPortApp
                     from flight in allFlights
                     where flight.Number == number
                     select flight;
-                foreach (Flight flight in filtered)
-                {
-                    Console.WriteLine("{0}n\",flight",flight.ToString());
-                }
+                //foreach (Flight flight in filtered)
+                //{
+                //    Console.WriteLine("{0}n\",flight", flight.ToString());
+                //}
+                return filtered;
             }
+        }
+
+        internal static IEnumerable FindSQLTicketOnly(int number)
+        {                
+                IEnumerable<Ticket> filtered =
+                    from ticket in AllTicketsToList()
+                    where ticket.Number == number
+                    select ticket;
+            return filtered;    
+               }
+
+
+        internal static IEnumerable FindSQLPassengerOnly(string passport)
+        {
+            IEnumerable<Passenger> filtered =
+              from passenger in AllPassengersToList()
+              where passenger.Passport.Equals(passport)
+              select passenger;
+            return filtered;
+        }
+
+        internal static IEnumerable FindSQLPassengerOnly(string name, string surname)
+        {
+            IEnumerable<Passenger> filtered =
+              from passenger in AllPassengersToList()
+              where passenger.Name.Equals(name) && passenger.Surname.Equals(surname)
+              select passenger;
+            return filtered;
         }
 
 
@@ -195,7 +349,18 @@ namespace AirPortApp
                 int count = allTickets.Count();
                 return count;
             }
-
         }
+
+        internal static int CountAllPassengers()
+        {
+            using (var db = new AirportDB())
+            {
+                List<Passenger> allPassengers = db.Passengers.ToList<Passenger>();
+                int count = allPassengers.Count();
+                return count;
+            }
+        }
+
+
     }
 }

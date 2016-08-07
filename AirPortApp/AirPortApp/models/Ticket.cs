@@ -7,19 +7,14 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace AirPortApp
-{   
-    [Table ("Tickets")]
-    public class Ticket : IComparable <Ticket>
+{
+    [Table("Tickets")]
+    public class Ticket : IComparable<Ticket>
     {
         public int Number { get; set; }     // number
         [StringLength(15)]
-        public string Name { get; set; }    //Name of passenger
-        [StringLength(25)]
-        public string Surname { get; set; } // Surname of passenger
 
-        [StringLength(12)]
-        [Column("Passport", Order = 5, TypeName = "varchar")]
-        public string Passport { get; set; }   // Passport of passenger
+        public string Place { get; set; } //place
         public double Price { get; set; }   // price
         [Key]
         [Column(Order = 1)]
@@ -29,52 +24,60 @@ namespace AirPortApp
         public int FlightId { get; set; } // ticket id internal
         public Flight Flight { get; set; }  //Flight
 
-        
+        [ForeignKey("Passenger")]
+        public int PassId { get; set; } // ticket id internal
+        public Passenger Passenger { get; set; }
 
 
-        //     public virtual List<Flight> Flights { get; set; }
 
         public Ticket() { }
-        internal Ticket(Flight flight, int number, string name, string surname, string passport, double price)
+        internal Ticket(Flight flight, int number,  double price)
         {
             Flight = flight;
             Number = number;
-            Name = name;
-            Surname = surname;
-            Passport = passport;
-            Price = price;
-        }
-        internal Ticket(Flight flight, int number, string name, string surname, double price)
-        {
-            Flight = flight;
-            Number = number;
-            Name = name;
-            Surname = surname;
             Price = price;
         }
 
+        internal Ticket(Flight flight, Passenger passenger, int number, double price, string place)
+        {
+            Flight = flight;
+            Passenger = passenger;
+            Number = number;
+            Price = price;
+            Place = place;
+        }
+
+        internal Ticket(Flight flight, Passenger passenger, int number, double price)
+        {
+            Flight = flight;
+            Passenger = passenger;
+            Number = number;
+            Price = price;
+        }
+
+        internal Ticket(Passenger passenger, int number, double price)
+        {
+            Passenger = passenger;
+            Number = number;
+            Price = price;
+        }
 
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            if (!Passport.Equals(null))
+            if (Place != null)
             {
                 sb.Append("-------\n").
                    Append("Number: ").Append(Number)
-                  .Append("\nName: ").Append(Name)
-                  .Append("\nSurname ").Append(Surname)
-                  .Append("\nPassport: ").Append(Passport)
-                  .Append("\nPrice: ").Append(Price);
+                  .Append("\nPrice: ").Append(Price)
+                  .Append("\nPlace: ").Append(Place);
             }
-            else {
-                sb.Append("-------\n").
-                Append("Number: ").Append(Number)
-               .Append("\nName: ").Append(Name)
-               .Append("\nSurname ").Append(Surname)
-               .Append("\nPassport not provided ")
-               .Append("\nPrice: ").Append(Price);
+            else
+            {   sb.Append("-------\n").
+                   Append("Number: ").Append(Number)
+                  .Append("\nPrice: ").Append(Price)
+                  .Append("\nPlace undefinied");
             }
-
             return sb.ToString();
         }
 

@@ -29,9 +29,13 @@ namespace AirPortApp
                         {
                             SQLoper.AllFlightsToList();
                         }
+                        if (!flightList.Any())
+                        {
+                            SQLoper.AllPassengersToList();
+                        }
                         if (Tickets.TicketsList==null)
-                            Helper.BuildInitialTickets();
-                        SQLoper.AddTickets(Tickets.TicketsList);
+                            Helper.BuildInitialTickets();                  
+                            SQLoper.AddTickets(Tickets.TicketsList);
                         input = Console.ReadLine();
                         break;
 
@@ -58,9 +62,9 @@ namespace AirPortApp
                         SQLoper.FindSQLFlight(numberF);
                         input = Console.ReadLine();
                         break;
-                    case "sqlAllfl":
+                    case "sqlallfl":
                         Console.WriteLine("You chose addSQL option.");
-                        SQLoper.FindSQLFlightWithTickets();
+                        SQLoper.FindSQLFlightWithTicketsandPassengers();
                         input = Console.ReadLine();
                         break;
 
@@ -79,7 +83,11 @@ namespace AirPortApp
                         {
                             SQLoper.AllFlightsToList();
                         }
-                        Ticket t12 = new Ticket(flightList.ElementAt(1), 3, "Alan", "Turing", "AM00001", 1500.56);
+                        if (Passengers.passList.Any() == false)
+                        {
+                            SQLoper.AllPassengersToList();
+                        }
+                        Ticket t12 = new Ticket(flightList.ElementAt(0),Passengers.passList.ElementAt(0), 1, 1500.56, "2A");
                         SQLoper.AddTicket(t12,4);
                         input = Console.ReadLine();
                         break;

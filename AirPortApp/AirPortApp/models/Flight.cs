@@ -101,6 +101,22 @@ namespace AirPortApp
             Gate = gate;
         }
 
+        internal Flight(List <Ticket> tickets, DateTime timeD, DateTime timeE, DateTime timeA, int number, string portD, string portA, string airline, string terminal, Flights.statusEnum statusE, string gate)
+        {
+            Tickets = tickets;
+            TimeDeparture = timeD;
+            TimeExpected = timeE;
+            TimeArrival = timeA;
+            Number = number;
+            PortArrival = portA;
+            PortDeparture = portD;
+            Airline = airline;
+            Terminal = terminal;
+            StatusE = statusE;
+            Status = StatusStringEnricher(statusE);
+            Gate = gate;
+        }
+
         internal Flight(DateTime timeD, DateTime timeE, int number,  string portD, string portA, string airline, string terminal, Flights.statusEnum statusE, string gate)
         {
             TimeDeparture = timeD;

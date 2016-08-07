@@ -5,7 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using static AirPortApp.Flights;
 using static AirPortApp.Tickets;
+using static AirPortApp.Passengers;
 using static AirPortApp.SQLoper;
+using System.Text.RegularExpressions;
 
 namespace AirPortApp
 {
@@ -31,27 +33,61 @@ namespace AirPortApp
                // AllFlightsToList();
                 BuildInitialFlights();
                     }
+
+            if (!passList.Any())
+            {
+                BuildInitialPassengers();
+            }
+
             Ticket t1, t2, t3, t4, t5, t6, t7, t8, t9, t10;
-            t1 = new Ticket(flightList.ElementAt(0), 1, "Bill", "Gates", "AM00001", 1500.56);
-            t2 = new Ticket(flightList.ElementAt(1), 2, "Fam", "Nuven", 1500.56);
-            t3 = new Ticket(flightList.ElementAt(1), 3, "Alan", "Turing", "AM00001", 1500.56);
-            t4 = new Ticket(flightList.ElementAt(2), 4, "James", "Bond", "AM00001", 511);
-            t5 = new Ticket(flightList.ElementAt(2), 5, "Andy", "Wozniak", "AM00001", 54666);
-            t6 = new Ticket(flightList.ElementAt(2), 7, "Nemo", "Captain", "AM00001", 100.56);
-            t7 = new Ticket(flightList.ElementAt(2), 8, "Mouse", "Eldgernon", "AM00001", 15.56);
-            t8 = new Ticket(flightList.ElementAt(3), 9, "Hilary", "Klinton", "AM00001", 500.14);
-            t9 = new Ticket(flightList.ElementAt(3), 10, "Gney", "Pompey", "AM00001", 1.56);
-            t10 = new Ticket(flightList.ElementAt(3), 11, "Sherlock", "Holmes", "AM00001", 1000.00);
+            t1 = new Ticket(flightList.ElementAt(0), passList.ElementAt(0), 1, 1500.56, "2A");
+            t2 = new Ticket(flightList.ElementAt(1), passList.ElementAt(1), 2,  1500.56, "3F");
+            t3 = new Ticket(flightList.ElementAt(1), passList.ElementAt(2), 3,1500.56, "1A");
+            t4 = new Ticket(flightList.ElementAt(2), passList.ElementAt(3), 4, 511, "4B");
+            t5 = new Ticket(flightList.ElementAt(2), passList.ElementAt(4), 5, 54666, "2C");
+            t6 = new Ticket(flightList.ElementAt(2), passList.ElementAt(5), 6, 100.56, "8E");
+            t7 = new Ticket(flightList.ElementAt(2), passList.ElementAt(6), 7, 15.56, "3D");
+            t8 = new Ticket(flightList.ElementAt(3), passList.ElementAt(7), 8, 500.14, "5A");
+            t9 = new Ticket(flightList.ElementAt(3), passList.ElementAt(8), 9, 1.56);
+            t10 = new Ticket(flightList.ElementAt(3), passList.ElementAt(9), 10, 1000.00, "8G");
             TicketsList = new List<Ticket>();
             TicketsList.AddValuesToList(t1,t2,t3,t4,t5,t6,t7,t8,t9,t10);
             //Tickets.TicketsList.AddRange(new Ticket[] { t1,t2,t3,t4,t5,t6,t7,t8,t9,t10});
         }
 
-//      internal Ticket(Flight flight, int number, string name, string surname, string passport, double price)
+        internal static void BuildInitialPassengers()
+        {
+          Passenger p1 = new Passenger("Bill", "Gates", "AM00001");
+          Passenger p2 = new Passenger("Fam", "Nuven");
+          Passenger p3 = new Passenger("Alan", "Turing", "AM001");
+          Passenger p4 = new Passenger("James", "Bond", "AM0023401");
+          Passenger p5 = new Passenger("Andy", "Wozniak", "AM00023");
+          Passenger p6 = new Passenger("Nemo", "Captain", "ADSD001");
+          Passenger p7 = new Passenger("Mouse", "Eldgernon", "AM000341");
+          Passenger p8 = new Passenger("Hilary", "Klinton", "AM0005451");
+          Passenger p9 = new Passenger("Gney", "Pompey", "AM0001434");
+          Passenger p10 = new Passenger("Sherlock", "Holmes", "AM0000321");
+          passList.AddValuesToList (p1, p2, p3, p4, p5, p6, p7, p8, p9, p10);
+        }
+
+
         public static void AddValuesToList<T>(this List<T> list, params T[] values)
         {
             list.AddRange(values);
         }
 
+        public static string StringWithoutNumbers(string input) 
+        {
+            string output = Regex.Replace(input, @"[\d-]", string.Empty);
+            //string output = new string(input.Where(c => c != '-' && (c < '0' || c > '9')).ToArray()); via lambda and Linq
+            return output;
+        }
+
+        public static void NumbersWithoutString(this string input) //similar with extension
+        {
+            string output = Regex.Replace(input, "[A-Za-z&*%#$@!(){}. ]", string.Empty);
+            output = Regex.Replace(output, @"\,+", ",");
+            input = output;
+        }
     }
 }

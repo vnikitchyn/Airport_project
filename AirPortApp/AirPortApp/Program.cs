@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Globalization;
-using static AirPortApp.Flights;
 using static AirPortApp.StartMenu;
+using static AirPortApp.SQLoper;
+using static AirPortApp.Helper;
+
 
 namespace AirPortApp
 {
@@ -14,10 +16,12 @@ namespace AirPortApp
         static void Main(string[] args)
         {
             //            if (flightList.Any() == false)
-            if (SQLoper.CountAllFlights() <= 0)
-                Helper.BuildInitialFlights();
-            if (SQLoper.CountAllTickets()<=0)
-                Helper.BuildInitialTickets();
+            if (CountAllFlights() <= 0)
+                BuildInitialFlights();
+            if (CountAllTickets()<=0)
+                BuildInitialTickets();
+            if (CountAllPassengers() <= 0)
+                BuildInitialTickets();
             Wellcome();
             string input = Console.ReadLine();
             Choices(input);
