@@ -101,7 +101,7 @@ namespace AirPortApp
             }
         }
 
-        internal static void AddFlight(Passenger passenger)
+        internal static void AddPassenger(Passenger passenger)
         {
             using (var db = new AirportDB())
             {
@@ -310,6 +310,17 @@ namespace AirPortApp
               from passenger in AllPassengersToList()
               where passenger.Name.Equals(name) && passenger.Surname.Equals(surname)
               select passenger;
+            return filtered;
+        }
+
+
+        internal static IEnumerable <dynamic> FindSQLTicketAndPassenger(int number)
+        {
+            IEnumerable<dynamic> filtered =
+                from t in AllTicketsToList()
+                where t.Number == number
+                join p in AllPassengersToList() on t.PassId equals p.PassId
+                select new {t.Number,p.Name,p.Surname,p.Passport,t.Place,t.Price };
             return filtered;
         }
 
